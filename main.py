@@ -1,14 +1,40 @@
-from typing import Optional
-
-from fastapi import FastAPI
-
+from fastapi import FastAPI,UploadFile, File
+import uvicorn
+from pydantic import BaseModel
+import os 
 app = FastAPI()
 
+class PredictionResult(BaseModel):
+    predictions: str
+    accuracy: float
 
 @app.get("/")
-async def root():
-    return {"message": "Hello World"}
+def hello():
+    return {"API":"API is working fine"}
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+@app.post("/predict")
+async def upload_image(img_file:UploadFile =File(...)):
+
+    if '.jpg' in img_file.filename or '.jpeg' in img_file.filename or '.png' in img_file.filename:
+        file_save_path="./images/"+img_file.filename
+        if os.path.exists("./images") == False:
+            os.makedirs("./images")
+
+        with open(file_save_path, "wb") as f:
+            f.write(img_file.file.read())
+
+        if os.path.exists(file_save_path):
+            # return {"image_path":file_save_path,"message": "Image saved successfully"}
+
+            predictions = "normal"
+            accuracy = 100
+
+            result = PredictionResult(predictions=predictions, accuracy=accuracy)
+            return result
+        else:
+            return {"error":"Image Not saved !!!"}
+    else:
+        return {"error": "File Type is not valid please upload only jpg,jpeg and png"}
+
+if __name__=="__main__":
+    uvicorn.run(app)
