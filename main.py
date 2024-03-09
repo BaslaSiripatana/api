@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, File
 import uvicorn
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from fastai.vision.all import load_learner, PILImage
 import os 
 
 app = FastAPI()
@@ -14,6 +15,9 @@ app.add_middleware(
     allow_methods=["POST"],
     allow_headers=["*"],
 )
+
+model_path = "cctv_model.pth.pth"  # Adjust the path accordingly
+learn = load_learner(model_path)
 
 class PredictionResult(BaseModel):
     predictions: str
