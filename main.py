@@ -16,8 +16,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-model_path = "cctv_model.pth.pth"  # Adjust the path accordingly
-learn = load_learner(model_path)
+# model_path = "cctv_model.pth.pth"  # Adjust the path accordingly
+# learn = load_learner(model_path)
 
 class PredictionResult(BaseModel):
     predictions: str
