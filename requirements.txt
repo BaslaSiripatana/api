@@ -1,4 +1,4 @@
 fastapi==0.68.0
 uvicorn==0.15.0
 fastai==2.7.14
-pyyaml==5.4.1
+# pyyaml==5.4.1
