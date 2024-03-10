@@ -2,8 +2,11 @@ from fastapi import FastAPI, UploadFile, File
 import uvicorn
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-from fastai.vision.all import load_learner, PILImage
+from fastai.vision.all import PILImage
 import os 
+
+import torch
+from fastai.learner import load_learner
 
 app = FastAPI()
 
@@ -16,8 +19,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-model_path = "cctv_model.pth.pth"  # Adjust the path accordingly
-learn = load_learner(model_path)
+model_path = "cctv_model.pth.pth"
+state = torch.load(model_path, map_location='cpu')
+learn = load_learner(file=model_path, state=state)
 
 class PredictionResult(BaseModel):
     predictions: str
