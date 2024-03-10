@@ -19,9 +19,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 model_path = "cctv_model.pth.pth"
-state = torch.load(model_path, map_location='cpu')
-learn = load_learner(file=model_path, state=state)
+learn = load_learner(model_path, cpu=True)  # assuming you want to load the model on CPU
 
 class PredictionResult(BaseModel):
     predictions: str
